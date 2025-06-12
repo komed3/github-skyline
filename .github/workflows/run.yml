@@ -18,16 +18,22 @@ jobs:
 
       # Install the gh-skyline extension (https://github.com/mislav/gh-skyline)
       - name: Install gh-skyline extension
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: gh extension install mislav/gh-skyline
 
       # Generate the STL file for the current year
       - name: Generate current year STL
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           CURRENT_YEAR=$(date +%Y)
           gh skyline --year "$CURRENT_YEAR" --output "$CURRENT_YEAR.stl"
 
       # Generate the full skyline STL (across all years)
       - name: Generate full skyline STL
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           gh skyline --full --output "skyline.stl"
 
