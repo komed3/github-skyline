@@ -1,3 +1,7 @@
+# This GitHub Actions workflow automatically updates 3D skyline STL files
+# representing GitHub activity (per year and overall) using the gh-skyline extension.
+# It runs daily via cron and commits any changes directly to the repository.
+
 name: Update GitHub Skyline
 
 on:
@@ -16,32 +20,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Install the gh-skyline extension (https://github.com/mislav/gh-skyline)
+      # Install the gh-skyline extension
       - name: Install gh-skyline extension
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh extension install github/gh-skyline
 
       # Generate the STL file for the current year
       - name: Generate current year STL
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           CURRENT_YEAR=$(date +%Y)
-          gh skyline --year "$CURRENT_YEAR" --output "$CURRENT_YEAR.stl"
+          gh skyline --user "komed3" --year "$CURRENT_YEAR" --output "$CURRENT_YEAR.stl"
 
       # Generate the full skyline STL (across all years)
       - name: Generate full skyline STL
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh skyline --full --output "skyline.stl"
+          gh skyline --user "komed3" --full --output "skyline.stl"
 
       # Configure Git for commit
       - name: Configure Git user
         run: |
-          git config user.name "${{ github.actor }}"
-          git config user.email "${{ github.actor }}@users.noreply.github.com"
+          git config user.name "komed3"
+          git config user.email "webmaster@komed3.de"
 
       # Commit STL files (only if there are changes)
       - name: Commit updated STL files
@@ -49,9 +53,9 @@ jobs:
           git add *.stl
           git diff --cached --quiet || git commit -m "Update skyline STL files [auto]"
 
-      # Push changes using GITHUB_TOKEN
+      # Push changes to the repo's main branch
       - name: Push changes
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
-          git push https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git HEAD:main
+          git push https://x-access-token:${PAT}@github.com/${{ github.repository }}.git HEAD:main
