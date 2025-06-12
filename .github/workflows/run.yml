@@ -13,6 +13,7 @@ on:
 
 jobs:
   update-skyline:
+    name: Update Skyline
     runs-on: ubuntu-latest
 
     steps:
@@ -40,6 +41,14 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh skyline --user "komed3" --full --output "skyline.stl"
+
+      # Generate the skyline STL (active years since 2020)
+      - name: Generate active years skyline STL
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          CURRENT_YEAR=$(date +%Y)
+          gh skyline --user "komed3" --year "2020-$CURRENT_YEAR" --output "print.stl"
 
       # Configure Git for commit
       - name: Configure Git user
