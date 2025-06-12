@@ -20,7 +20,7 @@ jobs:
       - name: Install gh-skyline extension
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh extension install mislav/gh-skyline
+        run: gh extension install github/gh-skyline
 
       # Generate the STL file for the current year
       - name: Generate current year STL
