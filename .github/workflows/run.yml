@@ -19,7 +19,7 @@ jobs:
     steps:
       # Checkout current repository
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       # Install the gh-skyline extension
       - name: Install gh-skyline extension
